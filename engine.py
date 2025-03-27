@@ -186,15 +186,6 @@ class GameEngine():
                 if enemy.health <= 0:
                     enemy.death() 
 
-    def handle_player_fall_damage(self):
-        '''
-        Handle player fall damage when landing on the ground.
-        '''
-        for obstacle in spritecollide(self.player, self.groups['obstacle'], False):
-            print(obstacle)
-            if self.player.vel_y > 1:
-                self.player.health -= 5
-
     def collect_item_boxes(self):
         ''' 
         Check if player collected any item boxes and add to inventory.
@@ -348,7 +339,6 @@ class GameEngine():
         self.handle_bullet_damage()
         self.handle_bullet_obstacle_collision()
         self.make_grenades_explode()
-        self.handle_player_fall_damage()
 
         # Standard updates to all sprite groups
         self.player.update()

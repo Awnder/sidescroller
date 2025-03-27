@@ -160,9 +160,9 @@ if __name__ == '__main__':
     exit_button = GameButton(exit_button_img, exit_button_x, exit_button_y)
 
     # Define notable game transitions
-    intro_fade = GameFade(FadeType.INTRO_EVENT, COLOR.BLACK)
-    level_fade = GameFade(FadeType.LEVEL_EVENT, COLOR.BLACK)
-    death_fade = GameFade(FadeType.DEATH_EVENT, COLOR.PINK)
+    intro_fade = GameFade(FadeType.INTRO_EVENT, COLOR.BLACK, 15)
+    level_fade = GameFade(FadeType.LEVEL_EVENT, COLOR.BLACK, 15)
+    death_fade = GameFade(FadeType.DEATH_EVENT, COLOR.PINK, 15)
 
     # The main game loop has several states, each handled separately:
     #   1. 'Menu' where the player can choose between options
