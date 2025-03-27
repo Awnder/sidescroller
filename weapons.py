@@ -2,7 +2,7 @@
 import pygame
 from pygame.time import get_ticks
 from pygame.image import load
-from settings import ENVIRONMENT, TILEMAP
+from settings import Direction, ENVIRONMENT, TILEMAP
 from os import listdir
 
 
@@ -23,6 +23,8 @@ class ItemBox(pygame.sprite.Sprite):
             'health': load(f'img/icons/health_box.png').convert_alpha(),
             'grenade': load(f'img/icons/grenade_box.png').convert_alpha(),
         }
+        cls.sound_fx = pygame.mixer.Sound('audio/item_box.wav')
+        cls.sound_fx.set_volume(0.4)
 
     def __init__(self, x, y, box_type='ammo', quantity=20):
         '''
@@ -34,17 +36,29 @@ class ItemBox(pygame.sprite.Sprite):
 
         self.box_type = box_type
         self.quantity = quantity
+        self.in_air = True
+        self.vel_x = 0
+        self.vel_y = ENVIRONMENT.ITEMBOX_VELOCITY_Y
+        self.direction = Direction.IDLE
         self.image = ItemBox.images[box_type]
         self.rect = self.image.get_rect()
         self.rect.midtop = (x, y - self.image.get_height())
+
+    def landed(self, impact_velocity):
+        '''
+        The physics engine calls this function when an ItemBox hits the ground.
+        It stops the object from moving further at its original velocity.
+        '''
+        self.vel_x = 0
+        self.vel_y = 0
+        self.in_air = False
 
     def draw(self, screen, camera_x):
         '''
         Draws this Item box after setting the camera position.
         '''        
         screen.blit(self.image, (self.rect.x + camera_x, self.rect.y))
-
-
+    
 class Bullet(pygame.sprite.Sprite):
     '''
     Bullets for the Soldier to shoot.

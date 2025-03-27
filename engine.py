@@ -184,7 +184,16 @@ class GameEngine():
                         self.groups['bullet'].add(bullet)
                 enemy.ai_move(self.world_data, TILEMAP.TILE_SIZE)
                 if enemy.health <= 0:
-                    enemy.death()               
+                    enemy.death() 
+
+    def handle_player_fall_damage(self):
+        '''
+        Handle player fall damage when landing on the ground.
+        '''
+        for obstacle in spritecollide(self.player, self.groups['obstacle'], False):
+            print(obstacle)
+            if self.player.vel_y > 1:
+                self.player.health -= 5
 
     def collect_item_boxes(self):
         ''' 
@@ -212,7 +221,16 @@ class GameEngine():
                 if enemy.health >= 0:
                     enemy.health -= bullet.damage
                     bullet.kill()
-    
+
+    def handle_bullet_obstacle_collision(self):
+        '''
+        Check for bullet collisions with obstacles and remove the bullet.
+        '''
+        for bullet in self.groups['bullet']:
+            for tile in self.groups['obstacle']:
+                if tile.rect.colliderect(bullet.rect):
+                    bullet.kill()
+
     def make_grenades_explode(self):
         '''
         Check for exploding grenades and initiate animation.
@@ -322,11 +340,15 @@ class GameEngine():
             self.apply_physics(enemy)
         for grenade in self.groups['grenade']:
             self.apply_physics(grenade)
+        for item in self.groups['item']:
+            self.apply_physics(item)
 
         # Special collision-based updates
         self.collect_item_boxes()
         self.handle_bullet_damage()
+        self.handle_bullet_obstacle_collision()
         self.make_grenades_explode()
+        self.handle_player_fall_damage()
 
         # Standard updates to all sprite groups
         self.player.update()

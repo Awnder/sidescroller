@@ -141,6 +141,12 @@ class Soldier(pygame.sprite.Sprite):
             self.vel_y = ENVIRONMENT.SOLDIER_JUMP_STRENGTH
             self.in_air = True
 
+        # Soldier is only set in air after pressing the jump button
+        # This prevents the Soldier from jumping in mid-air
+        # after falling off a cliff without pressing the jump button
+        if self.vel_y > 0:
+            self.in_air = True
+
         # Handle lateral movement
         if mleft_cmd and not mright_cmd:
             self.direction = Direction.LEFT
